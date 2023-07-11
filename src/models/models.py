@@ -41,6 +41,7 @@ class Product(Base):
     title = Column(String, nullable=False)
     availability = Column(Boolean)
     description = Column(String)
+    cost = Column(Integer)
 
 
 class Order(Base):
@@ -96,10 +97,10 @@ class Address(Base):
 
 class PaymentCard(Base):
     """Models a PaymentCard table"""
-    __tablename__ = "paymentCard"
+    __tablename__ = "paymentCards"
     id = Column(Integer, nullable=False, primary_key=True)
     id_user = Column(Integer, ForeignKey("users.id"))
-    card_number = Column(Integer)
+    card_number = Column(String)
     date = Column(String)
     cvc = Column(Integer)
 
