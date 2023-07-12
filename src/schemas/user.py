@@ -31,7 +31,6 @@ class UserOutSchema(BaseModel):
     middle_surname: str
     surname: str
     phone: str
-    address: str
     bonus: int = None
     email: EmailStr
     role: str

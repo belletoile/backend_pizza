@@ -90,6 +90,13 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], session: Ses
     return stmt
 
 
+@router.get("/address")
+def get_address_by_user_id(token: Annotated[str, Depends(oauth2_scheme)], session: Session = Depends(get_db)):
+    data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+    stmt = session.query(Address).filter_by(id_user=data["id"]).all()
+    return stmt
+
+
 @router.post("/address", response_model=AddressSchema)
 def add_address(token: Annotated[str, Depends(oauth2_scheme)],
                 payload: AddressBaseSchema = Body(),
@@ -124,6 +131,13 @@ def delete_address(id_address: int,
     session.delete(address)
     session.commit()
     return {'Status: 200 OK'}
+
+
+@router.get("/card")
+def get_card_by_user_id(token: Annotated[str, Depends(oauth2_scheme)], session: Session = Depends(get_db)):
+    data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+    stmt = session.query(PaymentCard).filter_by(id_user=data["id"]).all()
+    return stmt
 
 
 @router.post("/card", response_model=CardSchema)
