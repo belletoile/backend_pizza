@@ -14,6 +14,7 @@ from src.schemas.address import AddressSchema, AddressBaseSchema
 from src.schemas.user import UserSchema, CreateUserSchema, UserOutSchema
 from src.services.db import user as user_db_services
 from src.services.db import address as address_db_services
+from src.services.db import user
 import jwt
 
 router = APIRouter(
@@ -25,6 +26,10 @@ ALGORITHM = "HS256"
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="user/login")
 
+@router.post('/recovery')
+def password_recovery(email: str):
+    message = user.send_password_reset_link(email)
+    return message
 
 @router.post('/signup', response_model=UserSchema)
 def signup(
