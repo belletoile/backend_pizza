@@ -9,12 +9,19 @@ from src.config import SECRET_KEY
 from src.models import models as user_model
 
 from src.database import get_db
-from src.models.models import User, Address
+from src.models.models import User, Address, PaymentCard
 from src.schemas.address import AddressSchema, AddressBaseSchema
+from src.schemas.card import CardBaseSchema, CardSchema
 from src.schemas.user import UserSchema, CreateUserSchema, UserOutSchema
 from src.services.db import user as user_db_services
 from src.services.db import address as address_db_services
+
 from src.services.db import user
+
+from src.services.db import card as card_db_services
+from src.services.db import user as send_password_reset_link
+from sqlalchemy.ext.asyncio import AsyncSession
+
 import jwt
 
 router = APIRouter(
@@ -30,6 +37,15 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="user/login")
 def password_recovery(email: str):
     message = user.send_password_reset_link(email)
     return message
+
+@router.post('/recovery')
+def password_recovery(phone: str, reset_link: str):
+    # Ваша логика для восстановления пароля
+
+    send_password_reset_link(phone, reset_link)
+
+    return {"message": "Password recovery SMS sent"}
+
 
 @router.post('/signup', response_model=UserSchema)
 def signup(
@@ -117,4 +133,36 @@ def delete_address(id_address: int,
     return {'Status: 200 OK'}
 
 
+@router.post("/card", response_model=CardSchema)
+def add_card(token: Annotated[str, Depends(oauth2_scheme)],
+             payload: CardBaseSchema = Body(),
+             session: Session = Depends(get_db)
+             ):
+    data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+    payload.id_user = data["id"]
+    return card_db_services.create_card(session, card=payload)
 
+
+@router.put("/card")
+def edit_card(token: Annotated[str, Depends(oauth2_scheme)],
+              payload: CardSchema = Body(),
+              session: Session = Depends(get_db)
+              ):
+    data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+    payload.id_user = data["id"]
+    stmt = sqlalchemy_update(PaymentCard).where(
+        PaymentCard.id == payload.id).values(**payload.dict())
+    session.execute(stmt)
+    session.commit()
+    return {'Status: 200 OK'}
+
+
+@router.delete("/card")
+def delete_card(id_card: int,
+                token: Annotated[str, Depends(oauth2_scheme)],
+                session: Session = Depends(get_db)
+                ):
+    card = session.query(PaymentCard).filter_by(id=id_card).first()
+    session.delete(card)
+    session.commit()
+    return {'Status: 200 OK'}

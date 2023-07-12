@@ -7,7 +7,11 @@ from sqlalchemy.orm import Session
 
 from src.models.models import User
 from src.schemas.user import CreateUserSchema
+
 import random, config, smtplib
+
+import requests
+
 
 
 def create_user(session: Session, user: CreateUserSchema):
@@ -20,6 +24,7 @@ def create_user(session: Session, user: CreateUserSchema):
 
 def get_user(session: Session, phone: str):
     return session.query(User).filter(User.phone == phone).one()
+
 
 def send_password_reset_link(email: str, session: Session):
     def rand():
