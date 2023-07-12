@@ -33,18 +33,11 @@ ALGORITHM = "HS256"
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="user/login")
 
+
 @router.post('/recovery')
 def password_recovery(email: str):
     message = user.send_password_reset_link(email)
     return message
-
-@router.post('/recovery')
-def password_recovery(phone: str, reset_link: str):
-    # Ваша логика для восстановления пароля
-
-    send_password_reset_link(phone, reset_link)
-
-    return {"message": "Password recovery SMS sent"}
 
 
 @router.post('/signup', response_model=UserSchema)

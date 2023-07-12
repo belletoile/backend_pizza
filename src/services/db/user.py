@@ -1,17 +1,13 @@
+import random
+import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from pydantic import EmailStr
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
+from src.config import LOGIN, PASSWORD
 from src.models.models import User
 from src.schemas.user import CreateUserSchema
-
-import random, config, smtplib
-
-import requests
-
 
 
 def create_user(session: Session, user: CreateUserSchema):
@@ -26,17 +22,17 @@ def get_user(session: Session, phone: str):
     return session.query(User).filter(User.phone == phone).one()
 
 
-def send_password_reset_link(email: str, session: Session):
+def send_password_reset_link(email: str):
     def rand():
         rnd = (random.randint(100000, 999999))
         return rnd
 
     msg = MIMEMultipart()
     msg['Subject'] = "Password Recovery"
-    msg['From'] = config.login
+    msg['From'] = LOGIN
     msg.attach(MIMEText(f"Hello, enter this code in the password recovery field {rand()}", "plain"))
 
     s = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-    s.login(config.login, config.password)
+    s.login(LOGIN, PASSWORD)
     s.sendmail(email, email, msg.as_string())
     return rand()
