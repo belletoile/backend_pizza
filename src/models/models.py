@@ -2,6 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import Integer, String, Column, LargeBinary, \
     ForeignKey, Boolean, Double, TIMESTAMP, DateTime
+from sqlalchemy.orm import relationship
 
 from src.config import SECRET_KEY
 from src.database import Base
@@ -42,6 +43,7 @@ class Product(Base):
     availability = Column(Boolean)
     description = Column(String)
     cost = Column(Integer)
+    orders = relationship('Order', secondary="productOrders", back_populates='products')
 
 
 class Order(Base):
@@ -57,6 +59,7 @@ class Order(Base):
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
     update_at = Column(DateTime)
     cost = Column(Double)
+    products = relationship('Product', secondary="productOrders", back_populates='orders')
 
 
 class Promotion(Base):
@@ -105,9 +108,9 @@ class PaymentCard(Base):
     cvc = Column(Integer)
 
 
-class ConsoleUser(Base):
+class ConsoleUsers(Base):
     """Models a СonsoleUser table"""
-    __tablename__ = "consoleUser"
+    __tablename__ = "consoleUsers"
     id = Column(Integer, nullable=False, primary_key=True)
     first_name = Column(String, nullable=False)
     surname = Column(String, nullable=False)

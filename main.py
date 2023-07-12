@@ -1,12 +1,14 @@
 import uvicorn
-from fastapi import FastAPI, Request
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI
 from src.user.router import router as router_user
+from src.order.router import router as router_order
+from src.product.router import router as router_product
 
 app = FastAPI()
 
 app.include_router(router_user)
+app.include_router(router_order)
+app.include_router(router_product)
 
 
 if __name__ == "__main__":
