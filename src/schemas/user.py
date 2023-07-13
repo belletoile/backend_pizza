@@ -7,6 +7,7 @@ class UserBaseSchema(BaseModel):
     middle_surname: str
     surname: str
     phone: str
+    birth_date: str
     bonus: int = None
     email: EmailStr
     role: str
@@ -32,6 +33,7 @@ class UserOutSchema(BaseModel):
     phone: str
     bonus: int = None
     email: EmailStr
+    birth_date: str
     role: str
 
     class Config:

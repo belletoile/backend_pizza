@@ -136,6 +136,7 @@ class User(Base):
     phone = Column(String, nullable=False, unique=True)
     email = Column(String)
     hashed_password = Column(LargeBinary, nullable=False)
+    birth_date = Column(String)
     bonus = Column(Integer)
     role = Column(String)
 
