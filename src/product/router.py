@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from src.database import get_db
-from src.models.models import Product, IngredientsProduct
+from src.models.models import Product, IngredientsProduct, Ingredients
 
 router = APIRouter(
     prefix="/product",
@@ -26,4 +26,10 @@ def all_product(session: Session = Depends(get_db)):
 @router.get("/ingredient")
 def ingredient_by_id_product(id_product: int, session: Session = Depends(get_db)):
     stmt = session.query(IngredientsProduct).filter_by(id_product=id_product).all()
+    return stmt
+
+
+@router.get("/ingredients")
+def all_ingredients(session: Session = Depends(get_db)):
+    stmt = session.query(Ingredients).all()
     return stmt
