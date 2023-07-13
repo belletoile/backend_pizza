@@ -18,8 +18,8 @@ def create_user(session: Session, user: CreateUserSchema):
     return db_user
 
 
-def get_user(session: Session, phone: str):
-    return session.query(User).filter(User.phone == phone).one()
+def get_user(session: Session, email: str):
+    return session.query(User).filter(User.email == email).one()
 
 
 def send_password_reset_link(email: str):

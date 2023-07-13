@@ -66,7 +66,7 @@ def login(payload: OAuth2PasswordRequestForm = Depends(),
     """
     try:
         user: user_model.User = user_db_services.get_user(
-            session=session, phone=payload.username
+            session=session, email=payload.username
         )
     except:
         raise HTTPException(
