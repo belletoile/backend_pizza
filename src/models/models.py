@@ -33,6 +33,7 @@ class Ingredients(Base):
     id = Column(Integer, nullable=False, primary_key=True)
     title = Column(String, nullable=False)
     count = Column(Double)
+    minimum_count = Column(Double)
 
 
 class Product(Base):
@@ -121,6 +122,7 @@ class ConsoleUsers(Base):
     phone = Column(String, nullable=False, unique=True)
     email = Column(String)
     hashed_password = Column(String, nullable=False)
+    salary = Column(Double)
 
 
 class User(Base):

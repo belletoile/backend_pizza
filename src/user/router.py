@@ -9,7 +9,7 @@ from src.config import SECRET_KEY
 from src.models import models as user_model
 
 from src.database import get_db
-from src.models.models import User, Address, PaymentCard
+from src.models.models import User, Address, PaymentCard, Order
 from src.schemas.address import AddressSchema, AddressBaseSchema
 from src.schemas.card import CardBaseSchema, CardSchema
 from src.schemas.user import UserSchema, CreateUserSchema, UserOutSchema
@@ -173,3 +173,10 @@ def delete_card(id_card: int,
     session.delete(card)
     session.commit()
     return {'Status: 200 OK'}
+
+
+@router.get("/order")
+def get_all_orders_by_user_id(token: Annotated[str, Depends(oauth2_scheme)], session: Session = Depends(get_db)):
+    data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+    stmt = session.query(Order).filter_by(id_user=data["id"]).all()
+    return stmt
