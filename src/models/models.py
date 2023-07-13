@@ -62,6 +62,7 @@ class Order(Base):
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
     update_at = Column(DateTime)
     cost = Column(Double)
+    count = Column(Integer)
     products = relationship('Product', secondary="productOrders", back_populates='orders')
 
 
@@ -133,7 +134,7 @@ class User(Base):
     first_name = Column(String, nullable=False)
     surname = Column(String, nullable=False)
     middle_surname = Column(String)
-    phone = Column(String, nullable=False, unique=True)
+    phone = Column(String)
     email = Column(String)
     hashed_password = Column(LargeBinary, nullable=False)
     birth_date = Column(String)
