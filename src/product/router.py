@@ -13,14 +13,14 @@ router = APIRouter(
 @router.post("/products")
 def product_by_id(id_product: int, session: Session = Depends(get_db)):
     stmt = session.query(Product).filter_by(id=id_product).first()
-    return stmt
+    ingredient = session.query(IngredientsProduct).filter_by(id_product=id_product).all()
+    return stmt, ingredient
 
 
 @router.get("/products")
 def all_product(session: Session = Depends(get_db)):
-    stmt = session.query(Product).all()
-
-    return stmt
+    product = session.query(Product).all()
+    return product
 
 
 @router.get("/ingredient")
