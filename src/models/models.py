@@ -25,6 +25,7 @@ class IngredientsProduct(Base):
     id = Column(Integer, nullable=False, primary_key=True)
     id_product = Column(Integer, ForeignKey("products.id"))
     id_ingredient = Column(Integer, ForeignKey("ingredients.id"))
+    count = Column(Double)
 
 
 class Ingredients(Base):

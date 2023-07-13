@@ -25,8 +25,20 @@ def all_product(session: Session = Depends(get_db)):
 
 @router.get("/ingredient")
 def ingredient_by_id_product(id_product: int, session: Session = Depends(get_db)):
-    stmt = session.query(IngredientsProduct).filter_by(id_product=id_product).all()
-    return stmt
+    stmt = session.query(IngredientsProduct, Ingredients)\
+        .join(IngredientsProduct,
+              IngredientsProduct.id_ingredient == Ingredients.id)\
+        .filter_by(id_product=id_product)\
+        .all()
+    serialized_result = {
+        'product_id': id_product,
+    }
+    products = []
+    for result in stmt:
+        ingredient = result[1]
+        products.append(ingredient)
+    serialized_result['products'] = products
+    return serialized_result
 
 
 @router.get("/ingredients")
