@@ -43,6 +43,7 @@ class Product(Base):
     availability = Column(Boolean)
     description = Column(String)
     cost = Column(Integer)
+    image = Column(String)
     orders = relationship('Order', secondary="productOrders", back_populates='products')
 
 
@@ -75,6 +76,7 @@ class Courier(Base):
     __tablename__ = "couriers"
     id = Column(Integer, nullable=False, primary_key=True)
     first_name = Column(String, nullable=False)
+    surname = Column(String)
     salary = Column(Double)
 
 
@@ -83,6 +85,7 @@ class Chef(Base):
     __tablename__ = "chefs"
     id = Column(Integer, nullable=False, primary_key=True)
     first_name = Column(String, nullable=False)
+    surname = Column(String)
     salary = Column(Double)
 
 
