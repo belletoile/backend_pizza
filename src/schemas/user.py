@@ -38,3 +38,10 @@ class UserOutSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class UserTwoBaseSchema(BaseModel):
+    first_name: str
+    email: EmailStr
+    birth_date: str
+    id: int

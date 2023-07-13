@@ -131,8 +131,8 @@ class User(Base):
     """Models a user table"""
     __tablename__ = "users"
     id = Column(Integer, nullable=False, primary_key=True)
-    first_name = Column(String, nullable=False)
-    surname = Column(String, nullable=False)
+    first_name = Column(String)
+    surname = Column(String)
     middle_surname = Column(String)
     phone = Column(String)
     email = Column(String)

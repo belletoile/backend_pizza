@@ -12,7 +12,7 @@ from src.database import get_db
 from src.models.models import User, Address, PaymentCard, Order
 from src.schemas.address import AddressSchema, AddressBaseSchema
 from src.schemas.card import CardBaseSchema, CardSchema
-from src.schemas.user import UserSchema, CreateUserSchema, UserOutSchema
+from src.schemas.user import UserSchema, CreateUserSchema, UserOutSchema, UserTwoBaseSchema
 from src.services.db import user as user_db_services
 from src.services.db import address as address_db_services
 
@@ -88,6 +88,20 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], session: Ses
     data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
     stmt = session.query(User).get(data["id"])
     return stmt
+
+
+@router.put("/settings")
+def edit_profile(token: Annotated[str, Depends(oauth2_scheme)],
+                 payload: UserTwoBaseSchema = Body(),
+                 session: Session = Depends(get_db)
+                 ):
+    data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+    payload.id = data["id"]
+    stmt = sqlalchemy_update(User).where(
+        User.id == payload.id).values(**payload.dict())
+    session.execute(stmt)
+    session.commit()
+    return {'Status: 200 OK'}
 
 
 @router.get("/address")
